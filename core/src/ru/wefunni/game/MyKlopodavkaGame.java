@@ -3,37 +3,44 @@ package ru.wefunni.game;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.ScreenUtils;
-
+import ru.wefunni.game.network.SocketGameService;
 
 
 public class MyKlopodavkaGame extends ApplicationAdapter implements InputProcessor {
 
 	private ShapeRenderer shapeRenderer;
-	private GamePole gamePole;
+	private GamePoleRenderer gamePoleRenderer;
 
 	private SpriteBatch spriteBatch;
 
+	private GameController gameController;
 
-	
+
+
+
+
+
 	@Override
 	public void create () {
 		Gdx.input.setInputProcessor(this);
 		shapeRenderer = new ShapeRenderer();
 		spriteBatch = new SpriteBatch();
-		gamePole = new GamePole(shapeRenderer, new Vector2Int(10, 10), spriteBatch);
+		Vector2Int poleSize = new Vector2Int(10, 10);
+		GamePoleState state = new GamePoleState(poleSize);
+		gamePoleRenderer = new GamePoleRenderer(shapeRenderer, spriteBatch, state);
 
+		gameController = new GameController(new SocketGameService(), state);
+		gameController.startGame();
 	}
 
 	@Override
 	public void render () {
 		ScreenUtils.clear(1,1,1,1);
 
-		gamePole.render();
+		gamePoleRenderer.render();
 	}
 	
 	@Override
@@ -64,8 +71,11 @@ public class MyKlopodavkaGame extends ApplicationAdapter implements InputProcess
 
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-		System.out.println(screenX + " " + screenY);
-		gamePole.handleClick(screenX, Gdx.graphics.getHeight() - screenY, button);
+		//System.out.println(screenX + " " + screenY);
+		//gamePole.handleClick(screenX, Gdx.graphics.getHeight() - screenY, button);
+
+		gameController.handleClick(gamePoleRenderer.getCell(screenX, Gdx.graphics.getHeight() - screenY));
+
 		return true;
 	}
 

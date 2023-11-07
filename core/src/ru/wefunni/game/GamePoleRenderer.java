@@ -5,13 +5,9 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Vector;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 
-public class GamePole {
+public class GamePoleRenderer {
     private ShapeRenderer shapeRenderer;
-    private Vector2Int size; // размер поля в клетках 10 10
 
     private GamePoleState gamePoleState;
 
@@ -23,10 +19,9 @@ public class GamePole {
     private Texture greenShadeTexture;
     private Texture redShadeTexture;
 
-    public GamePole(ShapeRenderer shapeRenderer, Vector2Int size, SpriteBatch spriteBatch) {
+    public GamePoleRenderer(ShapeRenderer shapeRenderer, SpriteBatch spriteBatch, GamePoleState gamePoleState) {
         this.shapeRenderer = shapeRenderer;
-        this.size = size;
-        this.gamePoleState = new GamePoleState(size);
+        this.gamePoleState = gamePoleState;
         this.spriteBatch = spriteBatch;
         emptyTexture = new Texture(Gdx.files.internal("dirt.png"));
         redBugTexture = new Texture(Gdx.files.internal("red_bug.png"));
@@ -40,9 +35,11 @@ public class GamePole {
         Vector2Int cellSize = getCellSize(); //пиксели
 
 
+        Vector2Int poleSize = gamePoleState.getSize();
+
         spriteBatch.begin();
-        for (int x = 0; x < size.x; x++) {
-            for (int y = 0; y < size.y; y++) {
+        for (int x = 0; x < poleSize.x; x++) {
+            for (int y = 0; y < poleSize.y; y++) {
                 spriteBatch.draw(emptyTexture, x * cellSize.x, y * cellSize.y, cellSize.x, cellSize.y);
                 CellState state = gamePoleState.getState(new Vector2Int(x, y));
                 if(state.isPlayer_1()) {
@@ -64,8 +61,8 @@ public class GamePole {
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         shapeRenderer.setColor(Color.WHITE);
 
-        for (int x = 0; x < size.x; x++) {
-            for (int y = 0; y < size.y; y++) {
+        for (int x = 0; x < poleSize.x; x++) {
+            for (int y = 0; y < poleSize.y; y++) {
                 shapeRenderer.rect(x * cellSize.x, y * cellSize.y, cellSize.x, cellSize.y);
 
             }
@@ -74,26 +71,16 @@ public class GamePole {
         shapeRenderer.end();
     }
 
-    public void handleClick(int xPx, int yPx, int button) {
+
+    public Vector2Int getCell(int xPx, int yPx) {
         Vector2Int cellSize = getCellSize();
         int cellX = xPx / cellSize.x;
         int cellY = yPx / cellSize.y;
-        CellState state = gamePoleState.getState(new Vector2Int(cellX, cellY));
-        if(state.isEmpty()) {
-            if(button == 0) {
-                state.setCross(CellState.PlayerType.PLAYER_1);
-            } else {
-                state.setCross(CellState.PlayerType.PLAYER_2);
-            }
-
-        } else if(!state.isShaded()) {
-            state.shade();
-        } else {
-            state.makeEmpty();
-        }
+        return new Vector2Int(cellX, cellY);
     }
 
     private Vector2Int getCellSize() {
-        return new Vector2Int( Gdx.graphics.getWidth() / size.x, Gdx.graphics.getHeight() / size.y);
+        Vector2Int poleSize = gamePoleState.getSize();
+        return new Vector2Int( Gdx.graphics.getWidth() / poleSize.x, Gdx.graphics.getHeight() / poleSize.y);
     }
 }
