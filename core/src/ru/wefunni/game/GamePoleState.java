@@ -21,4 +21,8 @@ public class GamePoleState {
     public CellState getState(Vector2Int pos) {
         return pole[pos.x][pos.y];
     }
+
+    public void setState(Vector2Int position, CellState state) {
+        pole[position.x][position.y] = state;
+    }
 }

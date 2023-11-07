@@ -14,6 +14,12 @@ public class CellState {
         this.player = null;
     }
 
+    public CellState(boolean isEmpty, boolean isShaded, PlayerType player) {
+        this.isEmpty = isEmpty;
+        this.isShaded = isShaded;
+        this.player = player;
+    }
+
     public boolean canUseAsPatch(PlayerType player) {
         if(isEmpty) {
             return false;
@@ -58,5 +64,10 @@ public class CellState {
     public enum PlayerType {
         PLAYER_1,
         PLAYER_2
+    }
+
+    public CellState copy() {
+        CellState cellState = new CellState(isEmpty, isShaded, player);
+        return cellState;
     }
 }

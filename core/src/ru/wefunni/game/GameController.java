@@ -16,7 +16,7 @@ public class GameController implements GameServiceEventListener {
     public void handleClick(Vector2Int cellPosition) {
         System.out.println(cellPosition.x + " " + cellPosition.y);
 
-        CellState state = gamePoleState.getState(cellPosition);
+        CellState state = gamePoleState.getState(cellPosition).copy();
         if(state.isEmpty()) {
         state.setCross(CellState.PlayerType.PLAYER_1);
         } else if(!state.isShaded()) {
@@ -24,6 +24,7 @@ public class GameController implements GameServiceEventListener {
         } else {
             state.makeEmpty();
         }
+        gameService.setCellState(cellPosition, state);
     }
 
     public void startGame() {
@@ -47,5 +48,7 @@ public class GameController implements GameServiceEventListener {
     @Override
     public void onCellChanged(Vector2Int cellPosition, CellState cellState) {
         //TODO применить новое состояние клетки к gamePoleState
+        gamePoleState.setState(cellPosition, cellState);
     }
+
 }
