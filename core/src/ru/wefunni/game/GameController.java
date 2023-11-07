@@ -1,15 +1,16 @@
 package ru.wefunni.game;
 
-import ru.wefunni.game.CommunicationClientServer.GameService;
-import ru.wefunni.game.network.IGameService;
+import ru.wefunni.game.domain.GameServiceEventListener;
+import ru.wefunni.game.domain.IGameService;
 
-public class GameController {
+public class GameController implements GameServiceEventListener {
     private IGameService gameService;
     private GamePoleState gamePoleState;
 
     public GameController(IGameService gameService, GamePoleState gamePoleState) {
         this.gameService = gameService;
         this.gamePoleState = gamePoleState;
+        gameService.subscribe(this);
     }
 
     public void handleClick(Vector2Int cellPosition) {
@@ -26,10 +27,25 @@ public class GameController {
     }
 
     public void startGame() {
-
+        gameService.startGame();
     }
 
     public void stopGame() {
 
+    }
+
+    @Override
+    public void onLobbyConnected(CellState.PlayerType playerType) {
+
+    }
+
+    @Override
+    public void onGameStarted() {
+        System.out.println("Game Start!");
+    }
+
+    @Override
+    public void onCellChanged(Vector2Int cellPosition, CellState cellState) {
+        //TODO применить новое состояние клетки к gamePoleState
     }
 }
