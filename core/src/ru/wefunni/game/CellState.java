@@ -1,6 +1,8 @@
 package ru.wefunni.game;
 
 import com.badlogic.gdx.utils.Null;
+import ru.wefunni.networkcore.Network;
+
 
 public class CellState {
     private boolean isEmpty;
