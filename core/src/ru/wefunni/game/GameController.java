@@ -7,6 +7,8 @@ public class GameController implements GameServiceEventListener {
     private IGameService gameService;
     private GamePoleState gamePoleState;
 
+    private CellState.PlayerType currentPlayer = CellState.PlayerType.PLAYER_1;
+
     public GameController(IGameService gameService, GamePoleState gamePoleState) {
         this.gameService = gameService;
         this.gamePoleState = gamePoleState;
@@ -15,16 +17,38 @@ public class GameController implements GameServiceEventListener {
 
     public void handleClick(Vector2Int cellPosition) {
         System.out.println(cellPosition.x + " " + cellPosition.y);
-
         CellState state = gamePoleState.getState(cellPosition).copy();
-        if(state.isEmpty()) {
-        state.setCross(CellState.PlayerType.PLAYER_1);
-        } else if(!state.isShaded()) {
-            state.shade();
-        } else {
-            state.makeEmpty();
+
+        if(gamePoleState.isEmpty()) {
+            if(currentPlayer == CellState.PlayerType.PLAYER_1) {
+                if(cellPosition.equals(new Vector2Int(0,9))) {
+                    state.setCross(CellState.PlayerType.PLAYER_1);
+                } else {
+                    return;
+                }
+            } else {
+                if(cellPosition.equals(new Vector2Int(9,0))) {
+                    state.setCross(CellState.PlayerType.PLAYER_2);
+                } else  {
+                    return;
+                }
+            }
+            gameService.setCellState(cellPosition, state);
+            return;
         }
-        gameService.setCellState(cellPosition, state);
+
+
+        if(state.isEmpty() || (!state.isPlayer(currentPlayer) && !state.isShaded())) {
+            if(!gamePoleState.startWave(cellPosition, currentPlayer)) return;
+
+            if(state.isEmpty()) {
+                state.setCross(currentPlayer);
+            } else {
+                state.shade();
+            }
+
+            gameService.setCellState(cellPosition, state);
+        }
     }
 
     public void startGame() {
@@ -50,5 +74,6 @@ public class GameController implements GameServiceEventListener {
         //TODO применить новое состояние клетки к gamePoleState
         gamePoleState.setState(cellPosition, cellState);
     }
+
 
 }

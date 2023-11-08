@@ -25,15 +25,15 @@ public abstract class GameEvent {
 
     public static void main(String[] args) {
         GsonBuilder builder = new GsonBuilder();
-        builder.registerTypeAdapter(GameEvent.class, new GameEventTypeAdapter());
+        builder.registerTypeAdapter(GameEvent.class, new GameEventTypeAdapter()); //класс GameEventTypeAdapter определяет, как объекты GameEvent будут сериализованы и десериализованы
         Gson gson = builder.create();
 
-        // Example serialization
+        //serialization
         GameEvent event = new GameWinEvent(CellState.PlayerType.PLAYER_1); // Use any subclass of GameEvent
         String json = gson.toJson(event);
         System.out.println(json);
 
-        // Example deserialization
+        //deserialization
         GameEvent deserializedEvent = gson.fromJson(json, GameEvent.class);
         System.out.println(((GameWinEvent)deserializedEvent).getPlayerType()); // Should print GameWinEvent
     }

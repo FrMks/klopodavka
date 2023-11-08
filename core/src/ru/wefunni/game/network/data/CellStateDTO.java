@@ -1,6 +1,6 @@
 package ru.wefunni.game.network.data;
 
-public enum CellStateDTO {
+public enum CellStateDTO { //создаем enum с такими же параметрами как в классе для общения с сервером
     EMPTY,
     PLAYER1_CROSS,
     PLAYER2_CROSS,

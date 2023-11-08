@@ -70,4 +70,9 @@ public class CellState {
         CellState cellState = new CellState(isEmpty, isShaded, player);
         return cellState;
     }
+
+    public boolean isPlayer(PlayerType player) {
+        return  player == this.player;
+    }
+
 }

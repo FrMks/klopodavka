@@ -3,7 +3,7 @@ package ru.wefunni.game.network.data;
 import ru.wefunni.game.CellState;
 
 public class CellStateDTOFactory {
-    public static CellStateDTO create(CellState cellState) {
+    public static CellStateDTO create(CellState cellState) { //превращение в DTO
         if(cellState.isEmpty()) return CellStateDTO.EMPTY;
         if(cellState.isPlayer_1() && !cellState.isShaded()) return CellStateDTO.PLAYER1_CROSS;
         if(cellState.isPlayer_2() && !cellState.isShaded()) return CellStateDTO.PLAYER2_CROSS;
@@ -12,7 +12,7 @@ public class CellStateDTOFactory {
         return CellStateDTO.EMPTY;
     }
 
-    public static CellState parse(CellStateDTO cellStateDTO) {
+    public static CellState parse(CellStateDTO cellStateDTO) { //превращение в CellState
         if(cellStateDTO == CellStateDTO.EMPTY) return new CellState(true, false, null);
         if(cellStateDTO == CellStateDTO.PLAYER1_CROSS) return new CellState(false, false, CellState.PlayerType.PLAYER_1);
         if(cellStateDTO == CellStateDTO.PLAYER2_CROSS) return new CellState(false, false, CellState.PlayerType.PLAYER_2);

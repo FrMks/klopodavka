@@ -9,7 +9,7 @@ public class CellChangeEvent extends GameEvent {
     private Vector2Int cellPosition;
     private CellStateDTO cellState;
     public CellChangeEvent(Vector2Int cellPosition, CellStateDTO cellState) {
-        super(EventType.CELL_CHANGE);
+        super(EventType.CELL_CHANGE); //вызываем конструктор супер класса
         this.cellPosition = cellPosition;
         this.cellState = cellState;
     }
